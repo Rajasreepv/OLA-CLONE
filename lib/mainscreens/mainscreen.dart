@@ -1,0 +1,45 @@
+import 'package:flutter/material.dart';
+import 'package:ride_app/mainscreens/Earnings.dart';
+import 'package:ride_app/mainscreens/home.dart';
+import 'package:ride_app/mainscreens/profile.dart';
+import 'package:ride_app/mainscreens/rating.dart';
+
+class mainpage extends StatefulWidget {
+  const mainpage({super.key});
+
+  @override
+  State<mainpage> createState() => _mainpageState();
+}
+
+class _mainpageState extends State<mainpage> {
+  final _pages = [home(), profile(), earnings()];
+  int indexnum = 0;
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("welcome"),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: "Profile",
+          ),
+          BottomNavigationBarItem(icon: Icon(Icons.money), label: "Earnings")
+        ],
+        unselectedItemColor: Color.fromARGB(255, 214, 135, 227),
+        iconSize: 15,
+        selectedFontSize: 18,
+        currentIndex: indexnum,
+        onTap: (int index) {
+          setState(() {
+            indexnum = index;
+          });
+        },
+      ),
+      body: _pages[indexnum],
+    );
+  }
+}
