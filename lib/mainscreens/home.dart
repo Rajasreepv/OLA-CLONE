@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:ride_app/widgets/divider.dart';
 
 class home extends StatefulWidget {
@@ -11,23 +13,59 @@ class home extends StatefulWidget {
 }
 
 class _homeState extends State<home> {
-  final Completer<GoogleMapController> _controllergooglemap = Completer();
-
+  Completer<GoogleMapController> _controllergooglemap = Completer();
   GoogleMapController? newgooglemapcontroller;
+  double bottompadding = 0;
+  void locateposition() async {
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error("Unable to fetch access");
+    }
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
+    if (permission == LocationPermission.denied) {
+      return Future.error("location permsn denied");
+    }
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error("denied forevr");
+    }
+    if (permission == LocationPermission.whileInUse) {
+      Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+      Position currentPosition = position;
+      LatLng latLatPosition = LatLng(position.latitude, position.longitude);
+
+      CameraPosition cameraPosition =
+          new CameraPosition(target: latLatPosition, zoom: 14);
+      newgooglemapcontroller!
+          .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+    }
+  }
+
   static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.42796133580664, -122.085749655962),
     zoom: 14.4746,
   );
   @override
+  @override
   Widget build(BuildContext context) {
     return Stack(children: [
       GoogleMap(
+        padding: EdgeInsets.only(bottom: bottompadding),
         mapType: MapType.normal,
         myLocationEnabled: true,
+        zoomGesturesEnabled: true,
+        zoomControlsEnabled: true,
         initialCameraPosition: _kGooglePlex,
         onMapCreated: (GoogleMapController controller) {
           _controllergooglemap.complete(controller);
           newgooglemapcontroller = controller;
+          setState(() {
+            bottompadding = 300;
+          });
+          locateposition();
         },
       ),
       ////
@@ -43,7 +81,7 @@ class _homeState extends State<home> {
         right: 0.0,
         bottom: 0.0,
         child: Container(
-          // height: 200.0,
+          height: 300.0,
           decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(
@@ -60,11 +98,12 @@ class _homeState extends State<home> {
             ],
           ),
           child: Padding(
-            padding: const EdgeInsets.all(18.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 24.0, vertical: 18.0),
             child: Column(
               children: [
                 const SizedBox(
-                  height: 6,
+                  height: 6.0,
                 ),
                 const Text(
                   "Hey There!!",
@@ -131,14 +170,14 @@ class _homeState extends State<home> {
                     ),
                   ],
                 ),
-                SizedBox(
-                  height: 24.0,
+                const SizedBox(
+                  height: 10.0,
                 ),
-                divider(),
-                SizedBox(
-                  height: 24.0,
+                const divider(),
+                const SizedBox(
+                  height: 16.0,
                 ),
-                Row(
+                const Row(
                   children: [
                     Icon(
                       Icons.work,

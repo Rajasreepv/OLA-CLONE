@@ -12,7 +12,10 @@ class mainpage extends StatefulWidget {
 }
 
 class _mainpageState extends State<mainpage> {
-  final _pages = [home(), profile(), earnings()];
+  final _pages = [
+    home(),
+    profile(),
+  ];
   int indexnum = 0;
   @override
   Widget build(BuildContext context) {
@@ -27,7 +30,7 @@ class _mainpageState extends State<mainpage> {
             icon: Icon(Icons.person),
             label: "Profile",
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.money), label: "Earnings")
+          // BottomNavigationBarItem(icon: Icon(Icons.money), label: "Earnings")
         ],
         unselectedItemColor: Color.fromARGB(255, 214, 135, 227),
         iconSize: 15,
