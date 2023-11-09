@@ -23,24 +23,27 @@ class _mainpageState extends State<mainpage> {
       appBar: AppBar(
         title: const Text("welcome"),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: "Profile",
-          ),
-          // BottomNavigationBarItem(icon: Icon(Icons.money), label: "Earnings")
-        ],
-        unselectedItemColor: Color.fromARGB(255, 214, 135, 227),
-        iconSize: 15,
-        selectedFontSize: 18,
-        currentIndex: indexnum,
-        onTap: (int index) {
-          setState(() {
-            indexnum = index;
-          });
-        },
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.only(bottom: 20),
+        child: BottomNavigationBar(
+          items: const [
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: "Profile",
+            ),
+            // BottomNavigationBarItem(icon: Icon(Icons.money), label: "Earnings")
+          ],
+          unselectedItemColor: Color.fromARGB(255, 214, 135, 227),
+          iconSize: 15,
+          selectedFontSize: 18,
+          currentIndex: indexnum,
+          onTap: (int index) {
+            setState(() {
+              indexnum = index;
+            });
+          },
+        ),
       ),
       body: _pages[indexnum],
     );
